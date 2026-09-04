@@ -1,13 +1,13 @@
 :root {
-  --bg: #f4efe6;
-  --ink: #2b241c;
-  --muted: #7a6f62;
-  --card: #fffdf8;
-  --line: #e4d9c8;
-  --accent: #c45c26;
-  --accent-dark: #9e4316;
-  --error: #9b2c2c;
-  --error-bg: #fdecec;
+  --bg: #f6eaea;
+  --ink: #2c1618;
+  --muted: #8a5e62;
+  --card: #fff8f8;
+  --line: #ebd0d2;
+  --accent: #c62828;
+  --accent-dark: #9b1c1c;
+  --error: #8a1515;
+  --error-bg: #fde8e8;
 }
 
 * {
@@ -20,7 +20,7 @@ body {
   font-family: "Avenir Next", "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, #fbeed8 0, transparent 42%),
+    radial-gradient(circle at top left, #f8d4d6 0, transparent 42%),
     var(--bg);
 }
 
@@ -28,7 +28,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(244, 239, 230, 0.9);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(14px);
 }
@@ -124,7 +124,7 @@ form {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(43, 36, 28, 0.06);
+  box-shadow: 0 10px 30px rgba(44, 22, 24, 0.06);
 }
 
 form input {
@@ -219,7 +219,7 @@ form button:disabled {
 
 .status {
   color: var(--muted);
-  background: rgba(255, 253, 248, 0.8);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
   border: 1px dashed var(--line);
   animation: pulse 1.4s ease-in-out infinite;
 }
@@ -248,7 +248,7 @@ form button:disabled {
   color: var(--ink);
   background: var(--card);
   text-decoration: none;
-  box-shadow: 0 8px 20px rgba(43, 36, 28, 0.05);
+  box-shadow: 0 8px 20px rgba(44, 22, 24, 0.05);
 }
 
 .back-to-recipes:hover {
@@ -267,7 +267,7 @@ form button:disabled {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 20px;
-  box-shadow: 0 16px 40px rgba(43, 36, 28, 0.08);
+  box-shadow: 0 16px 40px rgba(44, 22, 24, 0.08);
 }
 
 .recipe-hero {
@@ -318,13 +318,13 @@ form button:disabled {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 16px;
-  box-shadow: 0 10px 28px rgba(43, 36, 28, 0.06);
+  box-shadow: 0 10px 28px rgba(44, 22, 24, 0.06);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 a.gallery-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(43, 36, 28, 0.12);
+  box-shadow: 0 16px 36px rgba(44, 22, 24, 0.12);
 }
 
 .gallery-cover,
@@ -347,8 +347,8 @@ a.gallery-card:hover {
 .gallery-initial {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 3.2rem;
-  color: rgba(255, 253, 248, 0.88);
-  text-shadow: 0 8px 24px rgba(43, 36, 28, 0.25);
+  color: rgba(255, 248, 248, 0.88);
+  text-shadow: 0 8px 24px rgba(44, 22, 24, 0.25);
 }
 
 .gallery-body {

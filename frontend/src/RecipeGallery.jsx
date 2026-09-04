@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 
 const COVERS = [
-  ["#e2b48a", "#c45c26"],
-  ["#c5d4b0", "#5d7a45"],
-  ["#d7c4e8", "#6b5480"],
-  ["#f0c9a0", "#b56a2b"],
-  ["#f2c4c0", "#a34d4a"],
-  ["#c5d8e8", "#4a6a82"],
+  ["#f2c4c0", "#c62828"],
+  ["#e8a0a0", "#9b1c1c"],
+  ["#f0c9c0", "#b71c1c"],
+  ["#d4a0a8", "#7a1f2b"],
+  ["#e8b4a8", "#c43c2b"],
+  ["#f5d0d0", "#8b2e2e"],
 ];
 
 function coverFor(id) {
