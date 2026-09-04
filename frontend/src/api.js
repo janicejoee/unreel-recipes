@@ -1,4 +1,9 @@
 const SESSION_KEY = "cookbook_session";
+const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+
+function api(path) {
+  return `${API_URL}${path}`;
+}
 
 export function getSession() {
   try {
@@ -20,7 +25,7 @@ export async function refreshSession() {
     return null;
   }
 
-  const response = await fetch("/auth/refresh", {
+  const response = await fetch(api("/auth/refresh"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refresh_token: session.refresh_token }),
@@ -43,7 +48,7 @@ export async function authFetch(url, options = {}, retry = true) {
     headers.set("Authorization", `Bearer ${session.access_token}`);
   }
 
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(api(url), { ...options, headers });
   if (response.status === 401 && retry && session?.refresh_token) {
     const refreshed = await refreshSession();
     if (refreshed) return authFetch(url, options, false);
@@ -52,7 +57,7 @@ export async function authFetch(url, options = {}, retry = true) {
 }
 
 export async function login(email, password) {
-  const response = await fetch("/auth/login", {
+  const response = await fetch(api("/auth/login"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -64,7 +69,7 @@ export async function login(email, password) {
 }
 
 export async function signup(email, password) {
-  const response = await fetch("/auth/signup", {
+  const response = await fetch(api("/auth/signup"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
