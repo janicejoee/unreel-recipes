@@ -27,11 +27,11 @@ export default function AuthPage() {
   return (
     <main className="auth-page">
       <header className="page-intro">
-        <h1>{creating ? "Create your cookbook" : "Welcome back"}</h1>
+        <h1>{creating ? "Create an account" : "Welcome back"}</h1>
         <p className="lede">
           {creating
-            ? "Make an account to save recipes to your own collection."
-            : "Sign in to see the recipes you’ve saved."}
+            ? "Save recipes you pull from Instagram reels."
+            : <>Sign in to see the recipes you’ve <em>unreeled</em>.</>}
         </p>
       </header>
 

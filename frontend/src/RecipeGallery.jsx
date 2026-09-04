@@ -47,7 +47,7 @@ export default function RecipeGallery({ recipes }) {
     <section className="gallery-section">
       <h3>Recipes</h3>
       {recipes.length === 0 ? (
-        <p className="empty">No recipes yet. Paste a reel above to start your cookbook.</p>
+        <p className="empty">No recipes yet. Paste a reel above to get started.</p>
       ) : (
         <ul className="gallery">
           {recipes.map((recipe) => (

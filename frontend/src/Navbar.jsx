@@ -8,7 +8,8 @@ export default function Navbar() {
     <header className="site-nav">
       <div className="site-nav-inner">
         <Link to="/" className="site-nav-brand">
-          Cookbook
+          <span className="site-nav-name">Unreel</span>
+          <span className="site-nav-tagline">Recipes from reels.</span>
         </Link>
         {user && (
           <div className="site-nav-account">

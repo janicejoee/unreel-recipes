@@ -85,7 +85,7 @@ function Home() {
   return (
     <main>
       <header className="page-intro">
-        <p className="lede">Paste an Instagram reel and pull out the recipe.</p>
+        <p className="lede">Recipes from reels.</p>
       </header>
 
       <form onSubmit={handleSubmit}>

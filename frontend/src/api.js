@@ -1,4 +1,4 @@
-const SESSION_KEY = "cookbook_session";
+const SESSION_KEY = "unreel_session";
 const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
 function api(path) {
