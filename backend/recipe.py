@@ -38,19 +38,15 @@ def extract_recipe(caption: str, transcript: str | None = None) -> dict:
 
 
 def iter_recipe_from_url(url: str, user_id: str):
-    yield {"type": "status", "message": "Reading the reel caption…"}
+    yield {"type": "status", "message": "Unreeling the recipe…"}
     meta = fetch_instagram_meta(url)
 
-    yield {"type": "status", "message": "Extracting a recipe from the caption…"}
     result = extract_recipe(caption=meta["caption"])
 
     if not result.get("ingredients") or not result.get("steps"):
-        yield {"type": "status", "message": "Caption was light — extracting audio…"}
         with tempfile.TemporaryDirectory() as tmp:
             audio_path = fetch_instagram_audio(url, tmp)
-            yield {"type": "status", "message": "Transcribing the audio…"}
             transcript = transcribe_audio(audio_path)
-        yield {"type": "status", "message": "Extracting a recipe from the transcript…"}
         result = extract_recipe(caption=meta["caption"], transcript=transcript)
 
     yield {"type": "status", "message": "Saving the recipe…"}
