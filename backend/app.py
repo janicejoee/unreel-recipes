@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlparse
 
 from flask import Flask, Response, g, jsonify, request, stream_with_context
 from flask_cors import CORS
@@ -13,7 +14,7 @@ from auth import (
     sign_up,
 )
 from recipe import iter_recipe_from_url
-from store import get_recipe, list_recipes, public_recipe
+from store import delete_recipe, get_recipe, list_recipes, public_recipe
 
 app = Flask(__name__)
 CORS(app)
@@ -61,23 +62,31 @@ def me():
 @app.post("/extract")
 @require_user
 def extract():
-    url = (request.get_json(silent=True) or {}).get("url", "").strip()
+    body = request.get_json(silent=True) or {}
+    url = (body.get("url") or "").strip()
+    source_type = (body.get("source_type") or "").strip().lower()
+    parsed = urlparse(url)
+
+    if source_type not in {"instagram", "website"}:
+        return jsonify({"error": "Choose Instagram or website."}), 400
     if not url:
-        return jsonify({"error": "Paste an Instagram reel URL."}), 400
-    if "instagram.com" not in url:
+        return jsonify({"error": "Paste a recipe URL."}), 400
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return jsonify({"error": "Paste a valid URL."}), 400
+    if source_type == "instagram" and "instagram.com" not in parsed.netloc:
         return jsonify({"error": "That doesn't look like an Instagram URL."}), 400
 
     user_id = g.user.id
 
     def generate():
         try:
-            for event in iter_recipe_from_url(url, user_id):
+            for event in iter_recipe_from_url(url, user_id, source_type):
                 yield json.dumps(event) + "\n"
         except Exception as exc:
             yield json.dumps(
                 {
                     "type": "error",
-                    "error": str(exc) or "Could not extract a recipe from that reel.",
+                    "error": str(exc) or "Could not extract a recipe from that URL.",
                 }
             ) + "\n"
 
@@ -105,6 +114,14 @@ def recipe(recipe_id: str):
     if record is None:
         return jsonify({"error": "Recipe not found."}), 404
     return jsonify(record)
+
+
+@app.delete("/recipes/<recipe_id>")
+@require_user
+def remove_recipe(recipe_id: str):
+    if not delete_recipe(recipe_id, g.user.id):
+        return jsonify({"error": "Recipe not found."}), 404
+    return jsonify({"ok": True})
 
 
 if __name__ == "__main__":

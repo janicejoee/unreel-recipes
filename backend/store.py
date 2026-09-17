@@ -1,3 +1,4 @@
+import hashlib
 import os
 import re
 from datetime import datetime, timezone
@@ -33,11 +34,12 @@ def supabase_client():
     return _client
 
 
-def instagram_id_from_url(url: str) -> str:
-    match = re.search(r"instagram\.com/(?:reel|reels|p)/([^/?#]+)", url)
-    if match:
-        return match.group(1)
-    return re.sub(r"[^a-zA-Z0-9_-]+", "-", url)[-40:]
+def recipe_id_from_url(url: str, source_type: str = "instagram") -> str:
+    if source_type == "instagram":
+        match = re.search(r"instagram\.com/(?:reel|reels|p)/([^/?#]+)", url)
+        if match:
+            return match.group(1)
+    return hashlib.sha256(url.encode()).hexdigest()[:16]
 
 
 def public_recipe(row: dict | None) -> dict | None:
@@ -72,6 +74,16 @@ def get_recipe(recipe_id: str, user_id: str) -> dict | None:
     return rows[0] if rows else None
 
 
+def delete_recipe(recipe_id: str, user_id: str) -> bool:
+    if get_recipe(recipe_id, user_id) is None:
+        return False
+    _delete_thumbnail(user_id, recipe_id)
+    supabase_client().table("recipes").delete().eq("id", recipe_id).eq(
+        "user_id", user_id
+    ).execute()
+    return True
+
+
 THUMB_BUCKET = "thumbnails"
 THUMB_EXT = {
     "image/jpeg": "jpg",
@@ -96,14 +108,23 @@ def upload_thumbnail(user_id: str, recipe_id: str, data: bytes, content_type: st
     return bucket.get_public_url(path)
 
 
+def _delete_thumbnail(user_id: str, recipe_id: str) -> None:
+    paths = [f"{user_id}/{recipe_id}.{ext}" for ext in dict.fromkeys(THUMB_EXT.values())]
+    try:
+        supabase_client().storage.from_(THUMB_BUCKET).remove(paths)
+    except Exception:
+        pass
+
+
 def save_recipe(
     recipe: dict,
     source: str,
     user_id: str,
+    source_type: str = "instagram",
     thumbnail: bytes | None = None,
     thumbnail_type: str = "image/jpeg",
 ) -> dict:
-    recipe_id = instagram_id_from_url(source)
+    recipe_id = recipe_id_from_url(source, source_type)
     existing = get_recipe(recipe_id, user_id) or {}
     thumbnail_url = existing.get("thumbnail_url")
     if thumbnail:

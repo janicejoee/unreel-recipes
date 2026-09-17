@@ -12,7 +12,7 @@ export default function RecipeCard({ recipe }) {
       {recipe.source && (
         <p className="source">
           <a href={recipe.source} target="_blank" rel="noreferrer">
-            View original reel
+            View original
           </a>
         </p>
       )}

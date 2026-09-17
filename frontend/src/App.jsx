@@ -32,6 +32,7 @@ async function readExtractStream(response, onEvent) {
 function Home() {
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
+  const [sourceType, setSourceType] = useState("instagram");
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
@@ -55,13 +56,13 @@ function Home() {
       const response = await authFetch("/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ url: url.trim(), source_type: sourceType }),
       });
 
       const contentType = response.headers.get("content-type") || "";
       if (!contentType.includes("ndjson")) {
         const data = await response.json();
-        throw new Error(data.error || "Could not extract a recipe from that reel.");
+        throw new Error(data.error || "Could not extract a recipe from that URL.");
       }
 
       await readExtractStream(response, (event) => {
@@ -70,7 +71,7 @@ function Home() {
         } else if (event.type === "recipe") {
           navigate(`/recipes/${event.recipe.id}`);
         } else if (event.type === "error") {
-          throw new Error(event.error || "Could not extract a recipe from that reel.");
+          throw new Error(event.error || "Could not extract a recipe from that URL.");
         }
       });
     } catch (err) {
@@ -88,13 +89,38 @@ function Home() {
         <p className="lede">Recipes from reels.</p>
       </header>
 
+      <div className="source-toggle" role="radiogroup" aria-label="Link type">
+        <button
+          type="button"
+          role="radio"
+          aria-checked={sourceType === "instagram"}
+          className={sourceType === "instagram" ? "is-active" : ""}
+          onClick={() => setSourceType("instagram")}
+        >
+          Instagram
+        </button>
+        <button
+          type="button"
+          role="radio"
+          aria-checked={sourceType === "website"}
+          className={sourceType === "website" ? "is-active" : ""}
+          onClick={() => setSourceType("website")}
+        >
+          Website
+        </button>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <input
           type="url"
           name="url"
           value={url}
           onChange={(event) => setUrl(event.target.value)}
-          placeholder="https://www.instagram.com/reel/..."
+          placeholder={
+            sourceType === "instagram"
+              ? "https://www.instagram.com/reel/..."
+              : "https://www.example.com/recipe"
+          }
           autoComplete="off"
           required
         />

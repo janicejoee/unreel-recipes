@@ -95,3 +95,10 @@ export async function loadUser() {
 export function logout() {
   setSession(null);
 }
+
+export async function deleteRecipe(id) {
+  const response = await authFetch(`/recipes/${id}`, { method: "DELETE" });
+  const data = await response.json().catch(() => ({}));
+  if (response.status === 404) throw new Error("Recipe not found.");
+  if (!response.ok) throw new Error(data.error || "Could not delete this recipe.");
+}

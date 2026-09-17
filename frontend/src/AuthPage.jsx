@@ -30,7 +30,7 @@ export default function AuthPage() {
         <h1>{creating ? "Create an account" : "Welcome back"}</h1>
         <p className="lede">
           {creating
-            ? "Save recipes you pull from Instagram reels."
+            ? "Save recipes you pull from Instagram reels and websites."
             : <>Sign in to see the recipes you’ve <em>unreeled</em>.</>}
         </p>
       </header>
